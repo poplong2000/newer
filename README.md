@@ -1,6 +1,12 @@
-CS80 扩展屏 · 便携安装包【感谢先驱 https://github.com/xbsheng/lakala-cs80，他搞定了不改硬件做副屏，然后我在他基础上，通过千问 把副屏改成便携屏。期间，ai编了虚拟便携屏驱动，推帧驱动等。因为我的电脑是 usb2.0 口，故我演示时有卡顿，如果是 3.0 的口，估计是没问题了】
-顺带说下，1 仓库没法上传大于 25MB的文件，所以有个展锐的驱动，我没上传，请大家至上面链接下载。 2midd 这个文件夹，本来默认是在 drivers 下面的，如果出错，请大家纠正一下。
+CS80 扩展屏 · 便携安装包
+
+【感谢先驱 https://github.com/xbsheng/lakala-cs80，他搞定了不改硬件做副屏，然后我在他基础上，通过千问 把副屏改成便携屏。期间，ai编了虚拟便携屏驱动，推帧驱动等。因为我的电脑是 usb2.0 口，故我演示时有卡顿，如果是 3.0 的口，估计是没问题了】
+顺带说下，
+1 仓库没法上传大于 25MB的文件，所以有个展锐的驱动，我没上传，请大家至上面链接下载。 
+2 usb midd 这个文件夹，本来默认是在 drivers 下面的，如果出错，请大家纠正一下。
+
 ==========闲鱼 39元 的拉卡拉 cs80 屏幕，改造成 便携屏，有图有真相，哈哈=========
+<img width="810" height="1440" alt="微信图片_20261123222601_2_4" src="https://github.com/user-attachments/assets/5bb43db5-bebf-45c7-9c30-ef370345d844" />
 
 
 把整个文件夹拷到任何 Windows 电脑（U 盘、网盘、新机器都行），跑一次安装就能把 CS80 当扩展显示器用。 不依赖 Python、不依赖 Visual Studio、不依赖任何第三方运行库，只用 Windows 自带的 .NET Framework 4.x。
@@ -52,6 +58,7 @@ install.log
 串口号自动识别。旧方案写死 COM14，换电脑必然失效。现在推帧器启动时会逐个串口发 QDC1 握手探测，自动命中设备数据口：
 自动查找 CS80 数据口，候选: COM10 COM14 COM3 COM4 COM5 COM6 COM7 COM8 COM9   COM10 无应答   COM14 -> QDC1 应答 block=520192  [命中]
 所有脚本路径都基于脚本自身所在目录，文件夹放哪、叫什么、在哪个盘都能用。
+<img width="1080" height="1920" alt="微信图片_20261123222602_5_4" src="https://github.com/user-attachments/assets/53c92ad3-d070-4aa6-91c4-b18eb82ddb94" />
 
 实测性能（本机真实数据）
 项目
@@ -98,6 +105,7 @@ CS80 是竖屏 800×1280；在显示设置里把该屏方向设为”纵向”
 CS80 不是 USB 显示器。它刷的 QDisplay 固件走私有 QDC1 协议，通过 USB 虚拟串口接收 framebuffer 数据，Windows 原生完全看不见它。所以方案是两层拼起来：
 Windows 桌面   └─ 虚拟显示器驱动 (usbmmidd / IddCx)   ← 让系统"有"第二块屏 800×1280        └─ cs80_ext.exe 抓这块屏的画面             └─ BGRA → BGR565 → QDC1 协议 → 设备串口                  └─ CS80 固件写 framebuffer → MIPI-DSI 上屏
 推帧器实现了完整 QDC1：xxHash32 校验、BEGIN/DATA/COMMIT 流程、512 字节整数倍拆包（避免固件不认 ZLP 导致超时）、光标绘制、失败重连。协议细节见 docs\protocol.md。
+<img width="1080" height="1920" alt="微信图片_20261123222602_4_4" src="https://github.com/user-attachments/assets/90e79d4d-a9c2-4aa3-99ae-96f4487b1335" />
 
 注意事项
 	•	供电：CS80 屏+音箱建议接 DC 12V/2A 独立供电，只靠 USB 在高亮度下可能不稳。
